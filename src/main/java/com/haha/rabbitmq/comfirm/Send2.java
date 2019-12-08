@@ -9,7 +9,7 @@ import com.rabbitmq.client.Connection;
  */
 public class Send2 {
 
-    private static final String queue_name = "queue_comfirm_1";
+    private static final String queue_name = "queue_comfirm_2";
 
     public static void main(String[] args) throws Exception {
         Connection connection = ConnectionUtils.getConnection();
