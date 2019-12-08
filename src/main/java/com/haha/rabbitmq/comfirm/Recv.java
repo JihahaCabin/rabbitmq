@@ -1,13 +1,13 @@
-package com.haha.rabbitmq.tx;
+package com.haha.rabbitmq.comfirm;
 
 import com.haha.rabbitmq.util.ConnectionUtils;
 import com.rabbitmq.client.*;
 
 import java.io.IOException;
 
-public class TxRecv {
+public class Recv {
 
-    private static final String queue_name = "tx_queue_test";
+    private static final String queue_name = "queue_comfirm_1";
 
     public static void main(String[] args) throws Exception {
         Connection connection = ConnectionUtils.getConnection();

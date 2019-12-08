@@ -1,14 +1,15 @@
-package com.haha.rabbitmq.tx;
+package com.haha.rabbitmq.comfirm;
 
 import com.haha.rabbitmq.util.ConnectionUtils;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 
 /**
- * 事务，缺点：降低吞吐量
+ * 批量confirm模式
  */
-public class TxSend {
-    private static final String queue_name = "tx_queue_test";
+public class Send2 {
+
+    private static final String queue_name = "queue_comfirm_1";
 
     public static void main(String[] args) throws Exception {
         Connection connection = ConnectionUtils.getConnection();
@@ -17,18 +18,21 @@ public class TxSend {
 
         channel.queueDeclare(queue_name, false, false, false, null);
 
+        //将channel设置为confirm模式
+        channel.confirmSelect();
         String msg = "Hello,tx";
-
-        try {
-            channel.txSelect();
-
+        for (int i = 0; i < 10; i++) {
             channel.basicPublish("", queue_name, null, msg.getBytes());
-            // int xx = 1/0;
-            channel.txCommit();
-        } catch (Exception e) {
-            channel.txRollback();
-            e.printStackTrace();
         }
+
+        if (!channel.waitForConfirms()) {
+            System.out.println("message send failed");
+        } else {
+            System.out.println("message send success");
+        }
+
+        System.out.println("send:" + msg);
+
         channel.close();
         connection.close();
     }
